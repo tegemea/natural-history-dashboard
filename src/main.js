@@ -3,11 +3,15 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import 'bootstrap'
 
+import axios from 'axios'
+
 // import global styles for use
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 Vue.use(VueRouter)
+
+Vue.prototype.$axios = axios;
 
 Vue.config.productionTip = false
 

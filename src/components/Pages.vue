@@ -6,13 +6,14 @@
         Add New Page
       </button>
     </h3>
+    {{ apiURL }}
     <table class="table table-s">
       <thead>
         <tr>
-          <td>Name</td>
-          <td>SEO Title</td>
-          <td class="text-center">Edit</td>
-          <td class="text-center">Delete</td>
+          <th>Name</th>
+          <th>SEO Title</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +28,7 @@
 
     <!-- Pages Modal -->
     <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">Add / Edit Page</h5>
@@ -36,11 +37,43 @@
             </button>
           </div>
           <div class="modal-body">
-            ...
+            <form id="pageForm" ref="pageForm">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" v-model="page.name" id="name" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="seo_title">SEO Title</label>
+                <input type="text" name="seo_title" v-model="page.seoTitle" id="seo_title" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="meta_description">Meta Description</label>
+                <input type="text" name="meta_description" v-model="page.metaDescription" id="meta_description" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="description">Page Description</label>
+                <textarea name="description" v-model="page.description" id="description" cols="30" rows="6" class="form-control"></textarea>
+              </div>
+              <div class="form-group">
+                <div v-if="!page.photo">
+                  <input type="file" id="photo" class="form-control">
+                </div>
+                <div v-else>
+                  <div v-if="page.photo && !page.photoPreview">
+                    <img :src="`${baseURL}/page_photos/${page.photo}`" alt="Preview" style="max-width: 70px">
+                    <button @click.prevent="page.photo = ''" class="btn btn-warning ml-3">Remove Photo</button>
+                  </div>
+                  <div v-else-if="page.photo && page.photoPreview">
+                    <img :src="page.photoPreview" alt="Preview" style="max-width: 70px">
+                    <button @click.prevent="page.photo = ''" class="btn btn-warning ml-3">Remove Photo</button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
+            <button @click.prevent="clearPageForm" type="button" class="btn btn-secondary">Clear</button>
+            <button type="button" class="btn btn-primary">{{ edit ? 'Save Changes' : 'Add New Page' }}</button>
           </div>
         </div>
       </div>
@@ -49,16 +82,49 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   data() {
     return {
-      // 
+      page: { name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
+      edit:''
     }
   },
   computed: {
-    ...mapGetters(['pages'])
+    ...mapGetters(['pages','apiURL']),
+  },
+  methods: {
+    ...mapMutations(['ADD_PAGE', 'UPDATE_PAGE', 'DELETE_PAGE']),
+    validateData() {
+
+    },
+    sendData() {
+      const vm = this;
+      if(vm.edit) {
+        // edit data
+        let formData = new FormData(vm.$refs.pageForm)
+        vm.$axios.post(`${vm.apiURL}/pages`)
+          .then(res => {
+            if(res.status === 201) {
+              vm.ADD_PAGE(res.data.data)
+            }
+          })
+          .catch(err => console.log(err))
+        
+      } else {
+        // add data
+        let formData = new FormData(vm.$refs.pageForm)
+        vm.$axios.post(`${vm.apiURL}/pages`)
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
+      }
+    },
+    clearPageForm() {
+      this.page.name = ''; this.page.seoTitle = ''; this.page.metaDescription = '';
+      this.page.description = ''; this.page.photo = ''; this.page.photoPreview = '';
+      this.edit = ''; document.querySelector('#pageForm').reset();
+    }
   }
 }
 </script>
