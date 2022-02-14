@@ -1,18 +1,21 @@
 <template>
-  <div id="app">
+  <div id="app" class="container-fluid">
     <Header />
-    <router-view></router-view>
+    <RouterView />
+    <Footer />
   </div>
 </template>
 
 <script>
+import Header from '@/components/UI/Header.vue'
+import Footer from '@/components/UI/Footer'
 import { mapGetters, mapActions } from 'vuex'
-import Header from '@/components/UI/Header'
 
 export default {
   name: 'App',
   cmponents: {
-    Header
+    Header,
+    Footer
   },
   computed: {
     ...mapGetters(['pages'])
