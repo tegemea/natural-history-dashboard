@@ -2,7 +2,7 @@
   <div>
     <h3 class="mb-3">
       Pages Listing
-      <button class="btn btn-primary float-right" data-toggle="modal" data-target="#staticBackdrop">
+      <button class="btn btn-primary float-right" data-toggle="modal" data-target="#pageModal">
         Add New Page
       </button>
     </h3>
@@ -20,13 +20,13 @@
           <td>{{ page.name }}</td>
           <td>{{ page.seo_title }}</td>
           <td @click.prevent="loadPage(i)" class="text-center"><a href="#">Edit</a></td>
-          <td class="text-center"><a href="#">Delete</a></td>
+          <td @click.prevent="removePage(i,page.id)" class="text-center"><a href="#">Delete</a></td>
         </tr>
       </tbody>
     </table>
 
     <!-- Pages Modal -->
-    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="pageModal" ref="pageModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
@@ -60,7 +60,7 @@
                 </div>
                 <div v-else>
                   <div v-if="page.photo && !page.photoPreview">
-                    <img :src="`${baseURL}/page_photos/${page.photo}`" alt="Preview" style="max-width: 100px">
+                    <img :src="`${baseURL}/storage/page_photos/${page.photo}`" alt="Preview" style="max-width: 100px">
                     <button @click.prevent="page.photo = ''" class="btn btn-warning ml-3">Remove Photo</button>
                   </div>
                   <div v-else-if="page.photo && page.photoPreview">
@@ -89,12 +89,12 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   data() {
     return {
-      page: { name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
+      page: { id:'', name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
       edit: false,
     }
   },
   computed: {
-    ...mapGetters(['pages','apiURL']),
+    ...mapGetters(['pages','apiURL', 'baseURL']),
   },
   methods: {
     ...mapMutations(['ADD_PAGE', 'UPDATE_PAGE', 'DELETE_PAGE']),
@@ -110,23 +110,51 @@ export default {
         // edit data
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
-        const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
-          vm.UPDATE_PAGE(data)
-          vm.$swal('success', 'Page Added','new page have been added')
+        formData.append('_method', 'PUT')
+        formData.append('id', vm.page.id)
+        const { data: { data } } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
+          vm.UPDATE_PAGE(data); vm.$swal('Page Updated', 'Page have been successfully updated','success');
+          vm.$jQuery('#pageModal').modal('hide');
           
         
       } else {
         // add data
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
-        const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
-          vm.ADD_PAGE(data)
-          vm.$swal('success','Page Updated','this page have been updated')
+        const { data: { data } } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
+          vm.ADD_PAGE(data); vm.$swal('Page Added','Page have been successfully added','success');
+          vm.$jQuery('#pageModal').modal('hide')
       }
     },
     loadPage(i) {
-      this.edit = true; this.$refs('#pageForm').modal('show');
-      console.log(i)
+      this.edit = true; this.$jQuery('#pageModal').modal('show')
+      this.page.id = this.pages[i].id;
+      this.page.name = this.pages[i].name;
+      this.page.seoTitle = this.pages[i].seo_title;
+      this.page.metaDescription = this.pages[i].metaDescription;
+      this.page.description = this.pages[i].description;
+      this.page.photo = this.pages[i].photo;
+    },
+    removePage(i,id) {
+      this.$swal.fire({
+        title: 'Are you sure you want to delete this page?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        denyButtonText: `Don't Delete`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.$axios.delete(`${this.apiURL}/pages/${id}`)
+            .then(res => {
+              if(res.status === 200) this.DELETE_PAGE(i);
+            })
+          
+          this.$swal.fire('Deleted!', '', 'success')
+        } else if (result.isDenied) {
+          this.$swal.fire('Page not deleted', '', 'info')
+        }
+      })
     },
     clearPageForm() {
       this.page.name = ''; this.page.seoTitle = ''; this.page.metaDescription = '';

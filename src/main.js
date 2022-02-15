@@ -5,6 +5,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'bootstrap'
 
 import axios from 'axios'
+import jQuery from 'jquery';
 
 // import styles for global use
 import 'bootstrap/dist/css/bootstrap.css';
@@ -15,6 +16,7 @@ Vue.use(VueRouter)
 Vue.use(VueSweetalert2)
 
 Vue.prototype.$axios = axios;
+Vue.prototype.$jQuery = jQuery;
 
 Vue.config.productionTip = false
 
