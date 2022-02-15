@@ -13,6 +13,7 @@ export default {
     },
     ADD_PAGE: (state, page) => {
       state.pages.push(page)
+      console.log(page);
     },
     UPDATE_PAGE: (state, page) => {
       let pageToUpdate = state.pages.find(p => p.id === page.id);

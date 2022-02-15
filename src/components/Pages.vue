@@ -16,10 +16,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="page in pages" :key="page.id">
+        <tr v-for="(page,i) in pages" :key="page.id">
           <td>{{ page.name }}</td>
           <td>{{ page.seo_title }}</td>
-          <td class="text-center"><a href="#">Edit</a></td>
+          <td @click.prevent="loadPage(i)" class="text-center"><a href="#">Edit</a></td>
           <td class="text-center"><a href="#">Delete</a></td>
         </tr>
       </tbody>
@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       page: { name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
-      edit:''
+      edit: false,
     }
   },
   computed: {
@@ -111,23 +111,27 @@ export default {
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
         const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
-          console.log(data)
+          vm.UPDATE_PAGE(data)
           vm.$swal('success', 'Page Added','new page have been added')
-          .catch(err => console.log(err))
+          
         
       } else {
         // add data
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
-        vm.$axios.post(`${vm.apiURL}/pages`, formData)
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
+          vm.ADD_PAGE(data)
+          vm.$swal('success','Page Updated','this page have been updated')
       }
+    },
+    loadPage(i) {
+      this.edit = true; this.$refs('#pageForm').modal('show');
+      console.log(i)
     },
     clearPageForm() {
       this.page.name = ''; this.page.seoTitle = ''; this.page.metaDescription = '';
       this.page.description = ''; this.page.photo = ''; this.page.photoPreview = '';
-      this.edit = ''; document.querySelector('#pageForm').reset();
+      this.edit = false; document.querySelector('#pageForm').reset();
     }
   }
 }
