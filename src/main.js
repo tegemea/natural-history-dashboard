@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
+import VueSweetalert2 from 'vue-sweetalert2';
 import 'bootstrap'
 
 import axios from 'axios'
 
-// import global styles for use
+// import styles for global use
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 Vue.use(VueRouter)
+Vue.use(VueSweetalert2)
 
 Vue.prototype.$axios = axios;
 

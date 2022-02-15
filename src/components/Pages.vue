@@ -112,6 +112,7 @@ export default {
         formData.append('photo', vm.page.photo)
         const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
           console.log(data)
+          vm.$swal('success', 'Page Added','new page have been added')
           .catch(err => console.log(err))
         
       } else {
