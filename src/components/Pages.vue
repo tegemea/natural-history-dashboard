@@ -6,7 +6,6 @@
         Add New Page
       </button>
     </h3>
-    {{ apiURL }}
     <table class="table table-s">
       <thead>
         <tr>
@@ -31,7 +30,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Add / Edit Page</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">{{ edit ? 'Edit Page' : 'Add New Page' }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -56,15 +55,16 @@
               </div>
               <div class="form-group">
                 <div v-if="!page.photo">
-                  <input type="file" id="photo" class="form-control">
+                  <label for="photo">Upload Photo</label>
+                  <input @change="selectPhoto" type="file" id="photo" class="form-control">
                 </div>
                 <div v-else>
                   <div v-if="page.photo && !page.photoPreview">
-                    <img :src="`${baseURL}/page_photos/${page.photo}`" alt="Preview" style="max-width: 70px">
+                    <img :src="`${baseURL}/page_photos/${page.photo}`" alt="Preview" style="max-width: 100px">
                     <button @click.prevent="page.photo = ''" class="btn btn-warning ml-3">Remove Photo</button>
                   </div>
                   <div v-else-if="page.photo && page.photoPreview">
-                    <img :src="page.photoPreview" alt="Preview" style="max-width: 70px">
+                    <img :src="page.photoPreview" alt="Preview" style="max-width: 100px">
                     <button @click.prevent="page.photo = ''" class="btn btn-warning ml-3">Remove Photo</button>
                   </div>
                 </div>
@@ -73,7 +73,9 @@
           </div>
           <div class="modal-footer">
             <button @click.prevent="clearPageForm" type="button" class="btn btn-secondary">Clear</button>
-            <button type="button" class="btn btn-primary">{{ edit ? 'Save Changes' : 'Add New Page' }}</button>
+            <button @click.prevent="validateData" type="button" class="btn btn-primary">
+              {{ edit ? 'Save Changes' : 'Add Page' }}
+            </button>
           </div>
         </div>
       </div>
@@ -96,26 +98,31 @@ export default {
   },
   methods: {
     ...mapMutations(['ADD_PAGE', 'UPDATE_PAGE', 'DELETE_PAGE']),
+    selectPhoto(e) {
+      this.page.photo = e.target.files[0]; this.page.photoPreview = URL.createObjectURL(this.page.photo);
+    },
     validateData() {
-
+      this.sendData();
     },
     sendData() {
       const vm = this;
       if(vm.edit) {
         // edit data
         let formData = new FormData(vm.$refs.pageForm)
-        vm.$axios.post(`${vm.apiURL}/pages`)
-          .then(res => {
-            if(res.status === 201) {
-              vm.ADD_PAGE(res.data.data)
-            }
+        formData.append('photo', vm.page.photo)
+        vm.$axios.post(`${vm.apiURL}/pages`, formData)
+          .then(res => { console.log(res)
+            // if(res.status === 201) {
+            //   vm.ADD_PAGE(res.data.data)
+            // }
           })
           .catch(err => console.log(err))
         
       } else {
         // add data
         let formData = new FormData(vm.$refs.pageForm)
-        vm.$axios.post(`${vm.apiURL}/pages`)
+        formData.append('photo', vm.page.photo)
+        vm.$axios.post(`${vm.apiURL}/pages`, formData)
           .then(res => console.log(res))
           .catch(err => console.log(err))
       }
