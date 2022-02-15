@@ -104,18 +104,14 @@ export default {
     validateData() {
       this.sendData();
     },
-    sendData() {
+    async sendData() {
       const vm = this;
       if(vm.edit) {
         // edit data
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
-        vm.$axios.post(`${vm.apiURL}/pages`, formData)
-          .then(res => { console.log(res)
-            // if(res.status === 201) {
-            //   vm.ADD_PAGE(res.data.data)
-            // }
-          })
+        const { data } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
+          console.log(data)
           .catch(err => console.log(err))
         
       } else {
