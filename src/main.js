@@ -25,11 +25,13 @@ import { store } from './store/store'
 // import components for the routes
 import Dashboard from '@/components/Dashboard'
 import Pages from '@/components/Pages'
+import WhatToDoWhen from '@/components/WhatToDoWhen'
 
 const routes = [
   { path: '/', redirect: '/dashboard' },
   { path: '/dashboard', component: Dashboard },
-  { path: '/pages', component: Pages }
+  { path: '/pages', component: Pages },
+  { path: '/what-to-do-when', component: WhatToDoWhen }
 ]
 
 const router = new VueRouter({
