@@ -15,13 +15,13 @@ export default {
       state.whatToDoWhens.push(whatToDoWhen)
     },
     UPDATE_WHAT_TO_DO_WHEN: (state, whatToDoWhen) => {
-      let eventToBeUpdated = state.whatToDoWhens.find(e => e.id === whatToDoWhen.id)
+      let eventToUpdate = state.whatToDoWhens.find(e => e.id === whatToDoWhen.id)
 
-      eventToBeUpdated.name = whatToDoWhen.name;
-      eventToBeUpdated.seo_title = whatToDoWhen.seo_title;
-      eventToBeUpdated.meta_description = whatToDoWhen.meta_description;
-      eventToBeUpdated.description = whatToDoWhen.description;
-      eventToBeUpdated.photo = whatToDoWhen.photo;
+      eventToUpdate.name = whatToDoWhen.name;
+      eventToUpdate.seo_title = whatToDoWhen.seo_title;
+      eventToUpdate.meta_description = whatToDoWhen.meta_description;
+      eventToUpdate.description = whatToDoWhen.description;
+      eventToUpdate.photo = whatToDoWhen.photo;
     },
     DELETE_WHAT_TO_DO_WHEN: (state, index) => {
       state.whatToDoWhens.splice(index, 1)
