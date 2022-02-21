@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import VueSweetalert2 from 'vue-sweetalert2';
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 import 'bootstrap'
 
 import axios from 'axios'
@@ -13,6 +14,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 Vue.use(VueRouter)
+Vue.use(CKEditor)
 Vue.use(VueSweetalert2)
 
 Vue.prototype.$axios = axios;

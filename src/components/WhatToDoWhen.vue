@@ -51,7 +51,8 @@
               </div>
               <div class="form-group">
                 <label for="description">Description</label>
-                <textarea name="description" v-model="WhatToDoWhen.description" id="description" cols="30" rows="4" class="form-control"></textarea>
+                <ckeditor :editor="editor" v-model="WhatToDoWhen.description" :config="editorConfig"></ckeditor>
+                <!-- <textarea name="description" v-model="WhatToDoWhen.description" id="description" cols="30" rows="4" class="form-control"></textarea> -->
               </div>
               <div class="form-group">
                 <div v-if="!WhatToDoWhen.photo">
@@ -85,12 +86,13 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export default {
   data() {
     return {
       WhatToDoWhen: { id:'', name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
-      edit: false
+      edit: false, editor: ClassicEditor, editorConfig: {}
     }
   },
   computed: {
@@ -111,6 +113,7 @@ export default {
         // edit data
         let formData = new FormData(vm.$refs.WhatToDoWhenForm)
         formData.append('_method', 'PUT')
+        formData.append('description', vm.WhatToDoWhen.description)
         formData.append('photo', vm.WhatToDoWhen.photo)
         formData.append('id', vm.WhatToDoWhen.id)
         const { data : { data } } = await vm.$axios.post(`${vm.apiURL}/what-to-do-when`, formData)
@@ -122,6 +125,7 @@ export default {
         // add data
         let formData = new FormData(vm.$refs.WhatToDoWhenForm)
         formData.append('photo', vm.WhatToDoWhen.photo)
+        formData.append('description', vm.WhatToDoWhen.description)
         const { data: { data }} = await vm.$axios.post(`${vm.apiURL}/what-to-do-when`, formData)
           vm.ADD_WHAT_TO_DO_WHEN(data);
           vm.$swal('What to do When Added', 'details have been successfully added','success');
