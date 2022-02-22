@@ -28,12 +28,14 @@ import { store } from './store/store'
 import Dashboard from '@/components/Dashboard'
 import Pages from '@/components/Pages'
 import WhatToDoWhen from '@/components/WhatToDoWhen'
+import NaturalAdventure from '@/components/NaturalAdventures'
 
 const routes = [
   { path: '/', redirect: '/dashboard' },
   { path: '/dashboard', component: Dashboard },
   { path: '/pages', component: Pages },
-  { path: '/what-to-do-when', component: WhatToDoWhen }
+  { path: '/natural-adventures', component: NaturalAdventure },
+  { path: '/what-to-do-when', component: WhatToDoWhen },
 ]
 
 const router = new VueRouter({

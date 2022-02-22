@@ -4,6 +4,7 @@
       <li class="list-inline-item"><RouterLink to="/dashboard">Dashboard</RouterLink></li>
       <li class="list-inline-item"><RouterLink to="/pages">Pages</RouterLink></li>
       <li class="list-inline-item"><RouterLink to="/what-to-do-when">What To Do When</RouterLink></li>
+      <li class="list-inline-item"><RouterLink to="/natural-adventures">Natural Adventures</RouterLink></li>
     </ul>
     <Header />
     <RouterView />
@@ -12,7 +13,7 @@
 </template>
 
 <script>
-import Header from '@/components/UI/Header.vue'
+import Header from '@/components/UI/Header'
 import Footer from '@/components/UI/Footer'
 import { mapActions } from 'vuex'
 
@@ -22,15 +23,13 @@ export default {
     Header,
     Footer
   },
-  computed: {
-    // ...mapGetters(['pages'])
-  },
   mounted() {
     this.getPages();
     this.getWhatToDoWhens();
+    this.getNaturalAdventures();
   },
   methods: {
-    ...mapActions(['getPages','getWhatToDoWhens'])
+    ...mapActions(['getPages','getWhatToDoWhens','getNaturalAdventures'])
   }
 }
 </script>
