@@ -55,7 +55,7 @@
               </div>
               <div class="form-group">
                 <label for="description">Natural Adventure Description</label>
-                <textarea name="description" v-model="adventure.description" id="description" cols="30" rows="6" class="form-control"></textarea>
+                <ckeditor :editor="editor" v-model="adventure.description" :config="editorConfig"></ckeditor>
               </div>
               <div class="form-group">
                 <div v-if="!adventure.photo">
@@ -89,11 +89,14 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export default {
   data() {
     return {
       adventure: { id:'', name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
+      editor: ClassicEditor,
+      editorConfig: {},
       edit: false
     }
   },
@@ -112,6 +115,7 @@ export default {
       if(this.edit) {
         // edit data
         let formData = new FormData(this.$refs.adventureForm)
+        formData.append('description', this.adventure.description)
         formData.append('photo', this.adventure.photo)
         formData.append('id', this.adventure.id)
         formData.append('_method', 'PUT')
@@ -122,6 +126,7 @@ export default {
       } else {
         // add data
         let formData = new FormData(this.$refs.adventureForm)
+        formData.append('description', this.adventure.description)
         formData.append('photo', this.adventure.photo)
         this.addNaturalAdventure(formData)
         this.$jQuery('#adventureModal').modal('hide')
