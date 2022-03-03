@@ -51,7 +51,7 @@
               </div>
               <div class="form-group">
                 <label for="description">Page Description</label>
-                <textarea name="description" v-model="page.description" id="description" cols="30" rows="6" class="form-control"></textarea>
+                <ckeditor :editor="editor" v-model="page.description" :config="editorConfig"></ckeditor>
               </div>
               <div class="form-group">
                 <div v-if="!page.photo">
@@ -85,12 +85,13 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export default {
   data() {
     return {
       page: { id:'', name:'', seoTitle:'', metaDescription:'', description:'', photo:'', photoPreview:'' },
-      edit: false,
+      edit: false, editor: ClassicEditor, editorConfig: {}
     }
   },
   computed: {
@@ -110,6 +111,7 @@ export default {
         // edit data
         let formData = new FormData(vm.$refs.pageForm)
         formData.append('photo', vm.page.photo)
+        formData.append('description', vm.page.description)
         formData.append('_method', 'PUT')
         formData.append('id', vm.page.id)
         const { data: { data } } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
@@ -120,6 +122,7 @@ export default {
       } else {
         // add data
         let formData = new FormData(vm.$refs.pageForm)
+        formData.append('description', vm.page.description)
         formData.append('photo', vm.page.photo)
         const { data: { data } } = await vm.$axios.post(`${vm.apiURL}/pages`, formData)
           vm.ADD_PAGE(data); vm.$swal('Page Added','Page have been successfully added','success');

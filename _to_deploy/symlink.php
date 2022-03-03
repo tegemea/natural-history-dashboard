@@ -1,0 +1,1 @@
+<?php symlink('/home1/africageological/api/v1/storage/app/public', '/home1/africageological/dashboard/storage');
