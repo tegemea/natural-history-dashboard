@@ -5,6 +5,7 @@
       <li class="list-inline-item"><RouterLink to="/pages">Pages</RouterLink></li>
       <li class="list-inline-item"><RouterLink to="/what-to-do-when">What To Do When</RouterLink></li>
       <li class="list-inline-item"><RouterLink to="/natural-adventures">Natural Adventures</RouterLink></li>
+      <li class="list-inline-item"><RouterLink to="/photos">Photos</RouterLink></li>
     </ul>
     <Header />
     <RouterView />
@@ -15,7 +16,7 @@
 <script>
 import Header from '@/components/UI/Header'
 import Footer from '@/components/UI/Footer'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -23,13 +24,17 @@ export default {
     Header,
     Footer
   },
+  computed: {
+    ...mapGetters(['pages', 'photos', 'whatToDoWhens', 'naturalAdventures'])
+  },
   mounted() {
-    this.getPages();
-    this.getWhatToDoWhens();
-    this.getNaturalAdventures();
+    if(!this.pages.length) this.getPages();
+    if(!this.photos.length) this.getPhotos();
+    if(!this.whatToDoWhens.length) this.getWhatToDoWhens();
+    if(!this.naturalAdventures.length) this.getNaturalAdventures();
   },
   methods: {
-    ...mapActions(['getPages','getWhatToDoWhens','getNaturalAdventures'])
+    ...mapActions(['getPages', 'getPhotos','getWhatToDoWhens','getNaturalAdventures'])
   }
 }
 </script>

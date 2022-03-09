@@ -6,6 +6,7 @@ import pages from './modules/pages'
 import settings from './modules/settings'
 import WhatToDoWhen from './modules/whatToDoWhen'
 import NaturalAdventures from './modules/naturalAdventures'
+import Photos from './modules/photos'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export const store = new Vuex.Store({
     pages,
     settings,
     WhatToDoWhen,
-    NaturalAdventures
+    NaturalAdventures,
+    Photos
   }
 })

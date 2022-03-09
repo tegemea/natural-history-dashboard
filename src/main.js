@@ -29,6 +29,7 @@ import Dashboard from '@/components/Dashboard'
 import Pages from '@/components/Pages'
 import WhatToDoWhen from '@/components/WhatToDoWhen'
 import NaturalAdventure from '@/components/NaturalAdventures'
+import Photos from '@/components/Photos'
 
 const routes = [
   { path: '/', redirect: '/dashboard' },
@@ -36,6 +37,7 @@ const routes = [
   { path: '/pages', component: Pages },
   { path: '/natural-adventures', component: NaturalAdventure },
   { path: '/what-to-do-when', component: WhatToDoWhen },
+  { path: '/photos', component: Photos },
 ]
 
 const router = new VueRouter({
